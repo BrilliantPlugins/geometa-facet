@@ -10,6 +10,12 @@ class GeoMeta_Facet {
 
 		$output = get_geometa_editor_map('geojson_facet','');
 
+		if ( $params['facet']['map_show_geocoder'] ) {
+			$output .= '<div><label for="map_location_name">Search Location</label><input type="text" name="map_location_name"/><br>';
+			$output .= '<label for="map_search_radius"><input type="text" name="map_search_radius" value="50"/><br>';
+			$output .= '</div>';
+		}
+
 		$output .= '<script>';
 		$output .= 'geometa_editor_initialize_fields();';
 		$output .= 'jQuery(".facetwp-facet").find(".geometa_editor_map")[0]._geometa_map.setView(' . $params['facet']['map_center'] . ',' . $params['facet']['map_zoom'] . ');';
