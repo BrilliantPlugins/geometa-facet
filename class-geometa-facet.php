@@ -11,7 +11,8 @@ class GeoMeta_Facet {
 		$output = get_geometa_editor_map('geojson_facet','');
 
 		$output .= '<script>';
-		$output .= geometa_editor_initialize_fields();
+		$output .= 'geometa_editor_initialize_fields();';
+		$output .= 'jQuery(".facetwp-facet").find(".geometa_editor_map")[0]._geometa_map.setView(' . $params['facet']['map_center'] . ',' . $params['facet']['map_zoom'] . ');';
 		$output .= '</script>';
 
 		return $output;
