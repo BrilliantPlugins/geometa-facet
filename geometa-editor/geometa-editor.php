@@ -6,10 +6,14 @@ function geometa_editor_scripts( $geometa_editor_url = '' ) {
 	$version = filemtime( dirname( __FILE__ ) );
 
 	// register & include JS
-	wp_register_script( 'geometa-editor-leaflet1-js', "{$geometa_editor_url}/js/leaflet.js", array(), $version );
-	wp_register_script( 'geometa-editor-leaflet-draw-js', "{$geometa_editor_url}/js/Leaflet.draw/leaflet.draw.js", array('geometa-editor-leaflet1-js'), $version );
-	wp_register_script( 'geometa-editor-leaflet-locate-control-js', "{$geometa_editor_url}/js/L.Control.Locate.min.js", array('geometa-editor-leaflet1-js'), $version );
-	wp_register_script( 'geometa-editor', "{$geometa_editor_url}/js/geometa-editor.js", array('geometa-editor-leaflet1-js', 'geometa-editor-leaflet-locate-control-js','geometa-editor-leaflet-draw-js'), $version );
+	wp_register_script( 'geometa-editor-leaflet-js', "{$geometa_editor_url}/js/leaflet.js", array(), $version );
+	wp_register_script( 'geometa-editor-leaflet-draw-js', "{$geometa_editor_url}/js/Leaflet.draw/leaflet.draw.js", array('geometa-editor-leaflet-js'), $version );
+	wp_register_script( 'geometa-editor-leaflet-locate-control-js', "{$geometa_editor_url}/js/L.Control.Locate.min.js", array('geometa-editor-leaflet-js'), $version );
+	wp_register_script( 'geometa-editor-leaflet-geocoder-js', "{$geometa_editor_url}/js/L.GeoSearch/js/l.control.geosearch.js", array('geometa-editor-leaflet-js'), $version );
+	wp_register_script( 'geometa-editor-leaflet-geocoder-osm-js', "{$geometa_editor_url}/js/L.GeoSearch/js/l.geosearch.provider.openstreetmap.js", array('geometa-editor-leaflet-geocoder-js'), $version );
+	wp_register_script( 'geometa-editor-leaflet-radius-js', "{$geometa_editor_url}/js/L.Control.Radius.js", array('geometa-editor-leaflet-js', 'geometa-editor-leaflet-geocoder-js'), $version );
+
+	wp_register_script( 'geometa-editor', "{$geometa_editor_url}/js/geometa-editor.js", array('geometa-editor-leaflet-js', 'geometa-editor-leaflet-locate-control-js','geometa-editor-leaflet-draw-js','geometa-editor-leaflet-geocoder-osm-js','geometa-editor-leaflet-radius-js'), $version );
 
 	if ( defined( 'GEOCODIO_API_KEY' ) ) {
 		wp_localize_script( 'geometa-editor', 'geometa_editor', array(
@@ -20,10 +24,11 @@ function geometa_editor_scripts( $geometa_editor_url = '' ) {
 	wp_enqueue_script('geometa-editor');
 
 	// register & include CSS
-	wp_register_style( 'geometa-editor-leaflet1-css', "{$geometa_editor_url}/css/leaflet.css", array(), $version );
-	wp_register_style( 'geometa-editor-leaflet-locate-control-css', "{$geometa_editor_url}/css/L.Control.Locate.min.css", array('geometa-editor-leaflet1-css'), $version );
-	wp_register_style( 'geometa-editor-leaflet-draw-css', "{$geometa_editor_url}/js/Leaflet.draw/leaflet.draw.css", array('geometa-editor-leaflet1-css'), $version );
-	wp_register_style( 'geometa-editor', "{$geometa_editor_url}/css/geometa-editor.css", array('geometa-editor-leaflet-draw-css'), $version );
+	wp_register_style( 'geometa-editor-leaflet-css', "{$geometa_editor_url}/css/leaflet.css", array(), $version );
+	wp_register_style( 'geometa-editor-leaflet-locate-control-css', "{$geometa_editor_url}/css/L.Control.Locate.min.css", array('geometa-editor-leaflet-css'), $version );
+	wp_register_style( 'geometa-editor-leaflet-draw-css', "{$geometa_editor_url}/js/Leaflet.draw/leaflet.draw.css", array('geometa-editor-leaflet-css'), $version );
+	wp_register_style( 'geometa-editor-leaflet-geocoder-css', "{$geometa_editor_url}/js/L.GeoSearch/css/l.geosearch.css", array('geometa-editor-leaflet-css'), $version );
+	wp_register_style( 'geometa-editor', "{$geometa_editor_url}/css/geometa-editor.css", array('geometa-editor-leaflet-draw-css', 'geometa-editor-leaflet-geocoder-css'), $version );
 
 	wp_enqueue_style('geometa-editor');
 }

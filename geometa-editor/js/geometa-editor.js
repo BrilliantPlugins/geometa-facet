@@ -43,8 +43,17 @@ function geometa_editor_make_maps(i,wrapperdiv) {
 			featureGroup: drawnItems
 		}
 	});
-
 	map.addControl( drawControl );
+
+	/*
+	// Geocode control
+	new L.Control.GeoSearch({
+		provider: new L.GeoSearch.Provider.OpenStreetMap()
+	}).addTo(map);
+
+	// Radius control 
+	new L.Control.Radius().addTo(map);
+	*/
 
 	// Make a function that will have access to drawnItems.
 	var savevalfunc = (function(thegeojson){
