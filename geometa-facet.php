@@ -14,12 +14,15 @@
  * @package geometa-facet
  **/
 
+require_once( dirname( __FILE__ ) . '/wp-geometa-lib/wp-geometa-lib-loader.php' );
 require_once( dirname( __FILE__ ) . '/class-geometa-facet.php' );
+require_once( dirname( __FILE__ ) . '/class-geometa-radius-facet.php' );
 require_once( dirname( __FILE__ ) . '/geometa-editor/geometa-editor.php');
 
 
 add_filter( 'facetwp_facet_types', function( $facet_types ) {
 	$facet_types['geometa'] = new GeoMeta_Facet();
+	$facet_types['geometa_radius'] = new GeoMeta_Radius();
 	return $facet_types;
 });
 
