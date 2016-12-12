@@ -73,29 +73,25 @@ class GeoMeta_Radius {
 		}
 		
 		$buffered_thing = WP_GeoUtil::WP_Buffer_Point_Mi( $geojson, $distance, 8);
+		$geom = WP_GeoUtil::metaval_to_geom( $buffered_thing );
 
-		$settings = FWP()->helper->get_setting( $params['facet']['name'] );
+		if ( isset( $params['facet']['source'] ) && 'acf/' == substr( $params['facet']['source'], 0, 4 ) ) {
+				 // doctor_locations_repeater_%_doctor_location',
+			$hierarchy_parts  = explode( '/', substr( $params['facet']['source'], 4 ) );
+			$hierarchy = array();
+			foreach( $hierarchy_parts as $field ) {
+				$meta_key = get_field_object( $field );
+				$hierarchy[] = $meta_key['name'];
+			}
 
-		$filter_query = new WP_Query( 
-				array(
-				'posts_per_page' => -1,
-				'post_type' => 'doctor',
-				'meta_query' => array(
-					array(
-						'key' => 'doctor_locations_repeater_%_doctor_location',
-						'value' => $buffered_thing,
-						'compare' => 'Intersect',
-					)
-					),
-				)
-			);
-
-		$post_ids = array();
-		if ( $filter_query->have_posts() ) {
-			$post_ids = wp_list_pluck( $filter_query, 'ID' );
+			$meta_key = implode('_%_', $hierarchy);
+		} else {
+			$meta_key = $params['facet']['source'];
 		}
 
-		// Geocode and filter
+		$sql = "SELECT DISTINCT post_id FROM {$wpdb->postmeta}_geo WHERE meta_key LIKE '{$meta_key}' AND ST_Intersects( GeomFromText('{$geom}'), meta_value )";
+
+		$post_ids = facetwp_sql( $sql, $params['facet'] );
 		return $post_ids;
 	}
 
@@ -103,7 +99,7 @@ class GeoMeta_Radius {
 ?>
 		<script>
 
-		wp.hooks.addAction('facetwp/load/checkboxes', function($this, obj) {
+		wp.hooks.addAction('facetwp/load/geometa_radius', function($this, obj) {
 			$this.find('.facet-source').val(obj.source);
 		});
 
