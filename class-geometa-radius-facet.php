@@ -143,13 +143,13 @@ class GeoMeta_Radius {
 		<script>
 		(function($) {
 			wp.hooks.addAction('facetwp/refresh/geometa_radius', function($this, facet_name) {
-				if ( $this.find('input[name="map_location_name"]').val() !== '' && $this.find('input[name="map_search_radius"]').val() !== '' ) {
+				// if ( $this.find('input[name="map_location_name"]').val() !== '' && $this.find('input[name="map_search_radius"]').val() !== '' ) {
 					var search_params = [
 						$this.find('input[name="map_location_name"]').val() || '',
 						$this.find('input[name="map_search_radius"]').val() || ''
 					];
 					FWP.facets[facet_name] = search_params;
-				}
+				// }
 			});
 
 			wp.hooks.addAction('facetwp/ready', function() {
