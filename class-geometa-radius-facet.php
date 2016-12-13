@@ -8,11 +8,26 @@ class GeoMeta_Radius {
 	}
 
 	public function render( $params ) {
+
 		$this->one_call = 'rendered';
 		$output = '';
 
-		$output .= '<div class="map_radius_wrap"><label for="map_location_name">Enter Location Name</label><input class="facetwp-geometa_radius" type="text" name="map_location_name"/><br>';
-		$output .= '<label for="map_search_radius">Search Radius (miles)</label><input class="facetwp-geometa_radius" type="text" name="map_search_radius" value="50"/><br>';
+		$distance = '50';
+		$location = '';
+
+		$params['selected_values'] = array_filter( $params['selected_values'] );
+
+		if ( !empty( $params['selected_values'] ) ) {
+			$distance = array_pop( $params['selected_values'] );
+			if ( empty( $distance ) ) {
+				$distance = 50;
+			}
+
+			$location = implode( ',', $params['selected_values'] );
+		}
+
+		$output .= '<div class="map_radius_wrap"><label for="map_location_name">Location Name</label><input class="facetwp-geometa_radius" type="text" name="map_location_name" value="' . $location . '"/><br>';
+		$output .= '<label for="map_search_radius">Search Radius (miles)</label><input class="facetwp-geometa_radius" type="text" name="map_search_radius" value="' . $distance .'"/><br>';
 		$output .= '</div>';
 
 		$output .= '<script>';
@@ -31,11 +46,12 @@ class GeoMeta_Radius {
 		}
 
 		$url = 'https://api.geocod.io/v1/geocode?api_key=' . GEOCODIO_API_KEY . '&' . http_build_query( array('q' => $location ) );
-		$json = file_get_contents( $url );
-		if ( empty( $json ) ) {
-			error_log( "No Geocod.io results!" );
-			return false;
-		}
+	
+		$json = @file_get_contents( $url );
+		// if ( empty( $json ) ) {
+		// 	error_log( "No Geocod.io results!" );
+		// 	return false;
+		// }
 		$json = json_decode( $json, true );
 
 		if ( empty( $json['results'] ) ) {
@@ -63,13 +79,22 @@ class GeoMeta_Radius {
 		global $wpdb;
 		$this->one_call = 'filtered_posts';
 
-		$location = $params['selected_values'][0];
-		$distance = $params['selected_values'][1];
+
+		$params['selected_values'] = array_filter( $params['selected_values'] );
+
+		if ( !empty( $params['selected_values'] ) ) {
+			$distance = array_pop( $params['selected_values'] );
+			$location = implode( ',', $params['selected_values'] );
+		}
+
+		if ( empty( $location ) ) {
+			return 'continue';
+		}
 
 		$geojson = $this->geocodio( $location );
 
 		if ( !$geojson ) {
-			return false;
+			return array();
 		}
 		
 		$buffered_thing = WP_GeoUtil::WP_Buffer_Point_Mi( $geojson, $distance, 8);
@@ -118,12 +143,13 @@ class GeoMeta_Radius {
 		<script>
 		(function($) {
 			wp.hooks.addAction('facetwp/refresh/geometa_radius', function($this, facet_name) {
-				console.log("refreshed!");
-				var search_params = [
-					$this.find('input[name="map_location_name"]').val() || '',
-					$this.find('input[name="map_search_radius"]').val() || ''
-				];
-				FWP.facets[facet_name] = search_params;
+				if ( $this.find('input[name="map_location_name"]').val() !== '' && $this.find('input[name="map_search_radius"]').val() !== '' ) {
+					var search_params = [
+						$this.find('input[name="map_location_name"]').val() || '',
+						$this.find('input[name="map_search_radius"]').val() || ''
+					];
+					FWP.facets[facet_name] = search_params;
+				}
 			});
 
 			wp.hooks.addAction('facetwp/ready', function() {
