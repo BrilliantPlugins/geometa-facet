@@ -26,7 +26,7 @@ class GeoMeta_Radius {
 			$location = implode( ',', $params['selected_values'] );
 		}
 
-		$output .= '<div class="map_radius_wrap"><label for="map_location_name">Location Name</label><input class="facetwp-geometa_radius" type="text" name="map_location_name" value="' . $location . '"/><br>';
+		$output .= '<div class="map_radius_wrap"><label for="map_location_name">Location Name</label><input placeholder="City, State" class="facetwp-geometa_radius" type="text" name="map_location_name" value="' . $location . '"/><br>';
 		$output .= '<label for="map_search_radius">Search Radius (miles)</label><input class="facetwp-geometa_radius" type="text" name="map_search_radius" value="' . $distance .'"/><br>';
 		$output .= '</div>';
 
