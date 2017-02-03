@@ -150,7 +150,9 @@ class GeoMeta_Radius {
 
 			wp.hooks.addAction('facetwp/ready', function() {
 				$(document).on('change', '.facetwp-facet .facetwp-geometa_radius', function() {
-					FWP.refresh();
+					if ( window.FWP.auto_refresh ) {
+						FWP.refresh();
+					}
 				});
 			});
 		})(jQuery);
