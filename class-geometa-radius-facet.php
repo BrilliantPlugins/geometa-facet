@@ -30,10 +30,6 @@ class GeoMeta_Radius {
 		$output .= '<label for="map_search_radius">Search Radius (miles)</label><input class="facetwp-geometa_radius" type="text" name="map_search_radius" value="' . $distance .'"/><br>';
 		$output .= '</div>';
 
-		$output .= '<script>';
-		$output .= 'console.log( "Make geocoding work" );';
-		$output .= '</script>';
-
 		return $output;
 	}
 
@@ -114,7 +110,7 @@ class GeoMeta_Radius {
 			$meta_key = $params['facet']['source'];
 		}
 
-		$sql = "SELECT DISTINCT post_id FROM {$wpdb->postmeta}_geo WHERE meta_key LIKE '{$meta_key}' AND ST_Intersects( GeomFromText('{$geom}'), meta_value )";
+		$sql = "SELECT DISTINCT post_id FROM {$wpdb->postmeta}_geo WHERE meta_key LIKE '{$meta_key}' AND ST_Intersects( GeomFromText('{$geom}'," . WP_GeoUtil::get_srid() . "), meta_value )";
 
 		$post_ids = facetwp_sql( $sql, $params['facet'] );
 		return $post_ids;
