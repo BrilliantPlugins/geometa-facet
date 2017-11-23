@@ -162,7 +162,7 @@ class GeoMeta_Radius {
 
 	public function settings_html() {
 		print '<tr><td>'; 
-		print '<p>You will need to acquire a key for <a href="https://geocod.io/" target="_blank">Geocod.io</a>, then define it with <pre>define( \'GEOCODIO_API_KEY\', \'your_key_here\' );</pre></p>';
+		print '<p>You will need to acquire a key for <a href="https://geocod.io/" target="_blank">Geocod.io</a>, then define it in your functions.php file with <pre>define( \'GEOCODIO_API_KEY\', \'your_key_here\' );</pre></p>';
 		print '<p>If you do not do this, the geocoding input will not show up, even with this checkbox checked</p>';
 		print '</td></tr>';
 	}

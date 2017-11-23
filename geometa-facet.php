@@ -14,7 +14,8 @@
  * @package geometa-facet
  **/
 
-require_once( dirname( __FILE__ ) . '/wp-geometa-lib/wp-geometa-lib-loader.php' );
+require_once( dirname( __FILE__ ) . '/lib/wp-geometa-lib/wp-geometa-lib-loader.php' );
+require_once( dirname( __FILE__ ) . '/lib/leaflet-php/leaflet-php-loader.php' );
 require_once( dirname( __FILE__ ) . '/class-geometa-facet.php' );
 require_once( dirname( __FILE__ ) . '/class-geometa-radius-facet.php' );
 require_once( dirname( __FILE__ ) . '/geometa-editor/geometa-editor.php');
