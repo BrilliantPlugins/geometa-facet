@@ -75,7 +75,6 @@ class GeoMeta_Radius {
 		global $wpdb;
 		$this->one_call = 'filtered_posts';
 
-
 		$params['selected_values'] = array_filter( $params['selected_values'] );
 
 		if ( !empty( $params['selected_values'] ) ) {
@@ -98,16 +97,19 @@ class GeoMeta_Radius {
 
 		if ( isset( $params['facet']['source'] ) && 'acf/' == substr( $params['facet']['source'], 0, 4 ) ) {
 				 // doctor_locations_repeater_%_doctor_location',
-			$hierarchy_parts  = explode( '/', substr( $params['facet']['source'], 4 ) );
+			$parts = explode( '/', substr( $params['facet']['source'], 4 ) );
 			$hierarchy = array();
-			foreach( $hierarchy_parts as $field ) {
+			foreach( $parts as $field ) {
 				$meta_key = get_field_object( $field );
 				$hierarchy[] = $meta_key['name'];
 			}
 
 			$meta_key = implode('_%_', $hierarchy);
+		} else if ( 'cf/' === substr( $params['facet']['source'], 0, 3 ) ) {
+			$parts = explode('/', $params['facet']['source'] );
+			$meta_key = $parts[1];
 		} else {
-			$meta_key = $params['facet']['source'];
+			return array();
 		}
 
 		$sql = "SELECT DISTINCT post_id FROM {$wpdb->postmeta}_geo WHERE meta_key LIKE '{$meta_key}' AND ST_Intersects( GeomFromText('{$geom}'," . WP_GeoUtil::get_srid() . "), meta_value )";
