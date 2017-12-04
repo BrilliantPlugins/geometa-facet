@@ -7,6 +7,9 @@ class GeoMeta_Radius {
 		$this->label = __( 'GeoMeta Radius', 'fwp' );
 	}
 
+	/**
+	 * Generate the output HTML for this facet type.
+	 */
 	public function render( $params ) {
 
 		$this->one_call = 'rendered';
@@ -71,6 +74,9 @@ class GeoMeta_Radius {
 		return $geojson;
 	}
 
+	/**
+	 * This method returns an array of post IDs that match the selected values for this facet.
+	 */
 	public function filter_posts( $params ) {
 		global $wpdb;
 		$this->one_call = 'filtered_posts';
@@ -118,6 +124,9 @@ class GeoMeta_Radius {
 		return $post_ids;
 	}
 
+	/**
+	 * Output any scripts or CSS for the admin settings page. This method contains Javascript logic for handling the loading/saving of facet settings.
+	 */
 	public function admin_scripts() {
 ?>
 		<script>
@@ -136,6 +145,9 @@ class GeoMeta_Radius {
 <?php
 	}
 
+	/**
+	 * Output any scripts or CSS for public-facing facet pages. This method contains Javascript logic for handling facet interaction.
+	 */
 	public function front_scripts() {
 ?>
 		<script>
@@ -162,6 +174,9 @@ class GeoMeta_Radius {
 <?php
 	}
 
+	/**
+	 * (optional) Output admin settings HTML.
+	 */
 	public function settings_html() {
 		print '<tr><td>'; 
 		print '<p>You will need to acquire a key for <a href="https://geocod.io/" target="_blank">Geocod.io</a>, then define it in your functions.php file with <pre>define( \'GEOCODIO_API_KEY\', \'your_key_here\' );</pre></p>';
