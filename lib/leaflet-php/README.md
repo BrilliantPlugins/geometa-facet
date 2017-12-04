@@ -66,7 +66,20 @@ $map->add_layer('L.geoJSON',$geojsonFeature,'destpoints');
 JavaScript
 ----------
 
-When the map is initialized, a 'leafletphp/loaded' event is trigger on the div containing the map.
+LeafletPHP uses [WP-JS-Hooks](https://github.com/carldanley/WP-JS-Hooks), and provides the following hooks. 
+
+### Action: leafletphp/preinit
+```
+wp.hooks.addAction( 'leafletphp/preinit', function( mapobject ){
+	// Do your stuff here.
+});
+
+wp.hooks.addAction( 'leafletphp/postinit', function( mapobject ){
+	// Do your stuff here.
+});
+```
+
+A standard event is also triggered when the map has been initialized. 
 
 You can respond to it in several ways including:
 

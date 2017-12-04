@@ -49,7 +49,6 @@ class GeoMeta_Draw {
 
 		(function($) {
 			wp.hooks.addAction( 'leafletphp/preinit', function( mapwrap ){
-
 				console.log("leafletphp/preinit");
 
 				// Alter the div ID, so that we don't get double IDs in the dom.
@@ -58,42 +57,35 @@ class GeoMeta_Draw {
 					mapwrap.scriptid = 'geometa_draw_' + geometa_draw_count;
 					geometa_draw_objects[mapwrap.scriptid] = mapwrap;
 					geometa_draw_count++;
+
+					// Store the map ID so that we can access the map later.
+					jQuery('#' + mapwrap.scriptid).closest('.facetwp-row').data('mapid',mapwrap.scriptid);
 				}
 			});
 
 			wp.hooks.addAction('facetwp/load/geometa_draw', function($this, obj) {
-				console.log("facetwp/load/geometa_draw");
 				// Store the object so we can re-initialize the map later.
 				$this.closest('.facetwp-row').data('facetobj',obj);
 			});
 
 			wp.hooks.addAction('facetwp/change/geometa_draw', function($this){
+				// Get the row object so we can re-access the facetobj and mapid.
+				var facetrow = $this.closest('.facetwp-row');
+				var leafletphp = geometa_draw_objects[facetrow.data('mapid')];
+				var facetobj = facetrow.data('facetobj');
+				leafletphp.map._onResize();
 
-				console.log("facetwp/change/geometa_draw");
-
-				if ( geometa_draw_objects[ geometa_draw_map.scriptid ] === undefined ) {
-					geometa_draw_objects[ geometa_draw_map.scriptid ] = geometa_draw_map;
+				if ( facetobj !== undefined && facetobj.map_zoom !== undefined && facetobj.map_center !== undefined ) {
+					leafletphp.map.setView( JSON.parse( facetobj.map_center ), facetobj.map_zoom );
 				}
-
-				for( var mo in geometa_draw_objects ) {
-					geometa_draw_objects[mo].map._onResize();
-				}
-
-				var obj = $this.closest('.facetwp-row').data('facetobj');
-
-				// var mapdiv = $this.closest('.facetwp-row').find('.geometa_editor_map');
-				// if ( mapdiv.length > 0 ) {
-				// 	var obj = $this.closest('.facetwp-row').find('input[name="geojson_facet"]')[0]._vals;
-				// 	var themap = mapdiv[0]._geometa_map;
-				// 	themap.setView(JSON.parse(obj.map_center), obj.map_zoom);
-				// }
 			});
 
 			wp.hooks.addFilter('facetwp/save/geometa_draw', function($this, obj) {
-				console.log("facetwp/save/geometa_draw");
+				var facetrow = $this.closest('.facetwp-row');
+				var leafletphp = geometa_draw_objects[facetrow.data('mapid')];
 
-				obj['map_zoom'] = geometa_draw_map.map.getZoom();
-				obj['map_center'] = JSON.stringify(geometa_draw_map.map.getCenter());
+				obj['map_zoom'] = leafletphp.map.getZoom();
+				obj['map_center'] = JSON.stringify(leafletphp.map.getCenter());
 				obj['map_show_geocoder'] = $this.find('input[name="map_show_geocoder"]').prop('checked');
 				return obj;
 			});
