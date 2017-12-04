@@ -11,7 +11,7 @@ class GeoMeta_Draw {
 	public function render( $params ) {
 		$output = '';
 
-		$output = get_geometa_editor_map('geojson_facet','');
+		// $output = get_geometa_editor_map('geojson_facet','');
 
 		if ( $params['facet']['map_show_geocoder'] ) {
 			$output .= '<div><label for="map_location_name">Search Location</label><input type="text" name="map_location_name"/><br>';
@@ -19,9 +19,25 @@ class GeoMeta_Draw {
 			$output .= '</div>';
 		}
 
-		$output .= '<script>';
-		$output .= 'jQuery(".facetwp-facet").find(".geometa_editor_map")[0]._geometa_map.setView(' . $params['facet']['map_center'] . ',' . $params['facet']['map_zoom'] . ');';
-		$output .= '</script>';
+		$map = new LeafletPHP(array(
+			'zoom' => $params['facet']['map_zoom'],
+			'center' => json_decode($params['facet']['map_center']),
+			), 'geometa_map_' . $params['facet']['name'], 'geometa_draw_map');
+
+		$map->add_layer('L.geoJSON',array(),'drawnItems');
+
+		$map->add_control('L.Control.Draw', array(
+			'edit' => array(
+				'featureGroup' => '@@@drawnItems@@@'
+			),
+			'draw' => array(
+				'circle' => false,
+				'marker' => false,
+				'gpsline' => false,
+				),
+			));
+
+		$output .= $map;
 
 		return $output;
 	}
@@ -126,7 +142,6 @@ class GeoMeta_Draw {
 		<!-- START THE LEAFLETPHP MAP -->
 		";
 		$map = new LeafletPHP(array(), 'geometa_draw_map', 'geometa_draw_map');
-		// $map->add_layer('L.GeoJSON',array(),'drawnItems');
 
 		// Can't Geolocate if it's not SSL.
 		if ( is_ssl() ) {

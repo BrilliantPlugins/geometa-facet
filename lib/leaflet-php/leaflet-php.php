@@ -267,10 +267,10 @@ class LeafletPHP {
 				$html[] = "if ( typeof L === 'undefined' ) { " . $this->newline_tab .  "load_missing_js('" . $missing_js['leafletphp-leaflet-js'] . "'); " . $this->newline . "};";
 			}
 			if ( !empty( $missing_js['leafletphp-draw-js'] ) ) {
-				$html[] = "if ( typeof L === 'undefined' || typeof L.Draw === 'undefined' ) { " . $this->newline_tab . "load_missing_js('" . $missing_js['leafletphp-draw-js'] . "'); " . $this->newline . "};";
+				$html[] = "if ( typeof L === 'undefined' || typeof L.Draw === 'undefined' ) { " . $this->newline_tab . "load_missing_js('" . $missing_js['leafletphp-draw-js'] . "'); " . $this->newline . "}";
 			}
 			if ( !empty( $missing_js['leafletphp-locate-js'] ) ) {
-				$html[] = "if ( typeof L === 'undefined' || typeof L.Control.Locate=== 'undefined' ) { " . $this->newline_tab . "load_missing_js('" . $missing_js['leafletphp-locate-js'] . "'); " . $this->newline . "};";
+				$html[] = "if ( typeof L === 'undefined' || typeof L.Control.Locate=== 'undefined' ) { " . $this->newline_tab . "load_missing_js('" . $missing_js['leafletphp-locate-js'] . "'); " . $this->newline . "}";
 			}
 		}
 
@@ -304,8 +304,9 @@ class LeafletPHP {
 		$html[] = 'function ' . $this->jsid . '_init( jsid ) { ';
 
 		// Set a script ID.
-		$html[] = 	$this->tab . 'new function(){';
+		$html[] = $this->tab . 'new function(){';
 
+		$html[] = 'window.michael = this;';
 		$html[] = $this->tab . 'this.scriptid = jsid || "' . $this->jsid . '";';
 
 		$html[] = $this->tab . 'wp.hooks.doAction( "leafletphp/preinit", this );';
@@ -381,6 +382,7 @@ class LeafletPHP {
 
 		// Set up reference to inside the container.
 		$html[] = $this->tab . 'window[this.scriptid] = window.leafletphp.maps[this.scriptid] = this;';
+		$html[] = $this->tab . 'console.log("Setting window[" + this.scriptid + "]");';
 
 		// Add user scripts here at the bottom.
 		foreach ( $this->scripts as $script ) {
@@ -391,7 +393,8 @@ class LeafletPHP {
 
 		$html[] = $this->tab . 'wp.hooks.doAction( "leafletphp/postinit", this );';
 
-		$html[] = '};}';
+		$html[] = '};';
+		$html[] = '}';
 
 		return $html;
 	}

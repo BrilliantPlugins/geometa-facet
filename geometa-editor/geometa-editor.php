@@ -38,47 +38,47 @@ function geometa_editor_scripts( $geometa_editor_url = '' ) {
 	wp_enqueue_style('geometa-editor');
 }
 
-function get_geometa_editor_map( $field_name, $field_value ) {
-	$html = '<div class="geometa_editor geometa_editor_map_wrap">';
-	$html .= '<div class="geometa_editor_map">The map is loading...</div>';
-	$html .= '<input type="hidden" data-name="geojson" name="' . esc_attr($field_name) . '" value="' . esc_attr($field_value) . '">';
-	$html .= '</div>';
-	return $html;
-}
+// function get_geometa_editor_map( $field_name, $field_value ) {
+// 	$html = '<div class="geometa_editor geometa_editor_map_wrap">';
+// 	// $html .= '<div class="geometa_editor_map">The map is loading...</div>';
+// 	$html .= '<input type="hidden" data-name="geojson" name="' . esc_attr($field_name) . '" value="' . esc_attr($field_value) . '">';
+// 	$html .= '</div>';
+// 	return $html;
+// }
+// 
+// function geometa_editor_map( $field_name, $field_value ) {
+// 	print get_geometa_editor_map( $field_name, $field_value );
+// }
 
-function geometa_editor_map( $field_name, $field_value ) {
-	print get_geometa_editor_map( $field_name, $field_value );
-}
-
-function geometa_editor_latlng( $field_name, $field_value ) {
-	$lat = '';
-	$lng = '';
-	if( !empty( $field_value ) ) {
-		$json = json_decode( $field_value, true );
-
-		// Better safe than sorry?
-		if (
-			!empty( $json ) &&
-			array_key_exists( 'type', $json ) &&
-			$json['type'] === 'Feature' &&
-			array_key_exists( 'geometry', $json ) &&
-			is_array( $json['geometry'] ) &&
-			array_key_exists( 'type', $json['geometry'] ) &&
-			$json['geometry']['type'] === 'Point' &&
-			array_key_exists('coordinates', $json['geometry']) &&
-			is_array( $json['geometry']['coordinates'] )
-		) {
-			$lat = $json['geometry']['coordinates'][1];
-			$lng = $json['geometry']['coordinates'][0];
-		}
-	}
-
-	echo '<div class="geometa_editor geometa_editor_ll_wrap">';
-	echo '<label>' . esc_html__('Latitude','geometa-acf') . ' </label><br><input type="text" data-name="lat" value="' . $lat . '"><br>';
-	echo '<label>' . esc_html__('Longitude','geometa-acf') . ' </label><br><input type="text" data-name="lng" value="' . $lng. '"><br>';
-	echo '<input type="hidden" data-name="geojson" name="' . esc_attr($field_name) . '" value="' . esc_attr($field_value) . '">';
-	echo '</div>';
-}
+// function geometa_editor_latlng( $field_name, $field_value ) {
+// 	$lat = '';
+// 	$lng = '';
+// 	if( !empty( $field_value ) ) {
+// 		$json = json_decode( $field_value, true );
+// 
+// 		// Better safe than sorry?
+// 		if (
+// 			!empty( $json ) &&
+// 			array_key_exists( 'type', $json ) &&
+// 			$json['type'] === 'Feature' &&
+// 			array_key_exists( 'geometry', $json ) &&
+// 			is_array( $json['geometry'] ) &&
+// 			array_key_exists( 'type', $json['geometry'] ) &&
+// 			$json['geometry']['type'] === 'Point' &&
+// 			array_key_exists('coordinates', $json['geometry']) &&
+// 			is_array( $json['geometry']['coordinates'] )
+// 		) {
+// 			$lat = $json['geometry']['coordinates'][1];
+// 			$lng = $json['geometry']['coordinates'][0];
+// 		}
+// 	}
+// 
+// 	echo '<div class="geometa_editor geometa_editor_ll_wrap">';
+// 	echo '<label>' . esc_html__('Latitude','geometa-acf') . ' </label><br><input type="text" data-name="lat" value="' . $lat . '"><br>';
+// 	echo '<label>' . esc_html__('Longitude','geometa-acf') . ' </label><br><input type="text" data-name="lng" value="' . $lng. '"><br>';
+// 	echo '<input type="hidden" data-name="geojson" name="' . esc_attr($field_name) . '" value="' . esc_attr($field_value) . '">';
+// 	echo '</div>';
+// }
 
 function geometa_editor_geojson( $field_name, $field_value ) {
 	echo '<div class="geometa_editor geometa_editor_geojson_wrap">';
